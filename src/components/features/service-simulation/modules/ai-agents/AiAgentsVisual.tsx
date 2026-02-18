@@ -66,10 +66,10 @@ const MOBILE_TASKS = [
 ];
 
 export default function AiAgentsVisual({ activePhase = "phase-1" }: AiAgentsVisualProps) {
-  const isP1  = activePhase === "phase-1";
-  const isP2  = activePhase === "phase-2";
-  const isP3  = activePhase === "phase-3";
-  const isP4  = activePhase === "phase-4";
+  const isP1 = activePhase === "phase-1";
+  const isP2 = activePhase === "phase-2";
+  const isP3 = activePhase === "phase-3";
+  const isP4 = activePhase === "phase-4";
   const isCTA = activePhase === "cta" || (!isP1 && !isP2 && !isP3 && !isP4);
 
   // ── Shared outer wrapper ──────────────────────────────────────────────────
@@ -464,364 +464,371 @@ export default function AiAgentsVisual({ activePhase = "phase-1" }: AiAgentsVisu
           MOBILE VISUAL — shown on mobile only, hidden md+
           Flat 2D, Y-axis only, no 3D transforms, minimal backdrop-blur
       ════════════════════════════════════════════════════════════════════ */}
-      <div className="flex md:hidden absolute inset-0 items-center justify-center overflow-hidden">
+      {/* Mobile wrapper with padding so dark container floats inside the phone screen */}
+      <div className="flex md:hidden absolute inset-0 items-center justify-center p-4 overflow-hidden">
+        {/* Dark floating widget — constrained height, premium rounded corners */}
+        <div
+          className="relative w-full h-[360px] rounded-[2rem] overflow-hidden flex items-center justify-center"
+          style={{ background: "rgba(3,6,18,0.97)", boxShadow: "0 0 0 1px rgba(255,255,255,0.06), 0 24px 60px rgba(0,0,0,0.7)" }}
+        >
 
-        {/* ── MOBILE PHASE 1: Terminal Error Scroll ─────────────────────── */}
-        <AnimatePresence mode="wait">
-          {isP1 && (
-            <motion.div
-              key="m-p1"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="absolute inset-0 flex flex-col items-center justify-center px-5 overflow-hidden"
-            >
-              {/* Dim red ambient */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: "radial-gradient(circle at 50% 50%, rgba(239,68,68,0.14) 0%, transparent 70%)" }}
-              />
+          {/* ── MOBILE PHASE 1: Terminal Error Scroll ─────────────────────── */}
+          <AnimatePresence mode="wait">
+            {isP1 && (
+              <motion.div
+                key="m-p1"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.5 }}
+                className="absolute inset-0 flex flex-col items-center justify-center px-4 overflow-hidden"
+              >
+                {/* Dim red ambient */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ background: "radial-gradient(circle at 50% 50%, rgba(239,68,68,0.12) 0%, transparent 70%)" }}
+                />
 
-              {/* Scrolling error cards */}
-              <div className="relative w-full overflow-hidden" style={{ height: 280 }}>
-                <motion.div
-                  className="flex flex-col gap-3 absolute w-full"
-                  animate={{ y: [0, -280] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-                >
-                  {MOBILE_ERRORS.map((err, i) => (
-                    <div
-                      key={i}
-                      className="w-full rounded-xl border px-4 py-3 flex items-start gap-3"
-                      style={{
-                        background: "rgba(30,10,10,0.7)",
-                        borderColor: "rgba(239,68,68,0.35)",
-                        boxShadow: "0 0 12px rgba(239,68,68,0.12)",
-                      }}
-                    >
-                      <AlertTriangle size={18} className="text-red-400 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <div className="text-sm font-mono font-bold text-red-400">{err.label}</div>
-                        <div className="text-xs font-mono text-red-700 mt-0.5">{err.sub}</div>
+                {/* Scrolling error cards — shrunk 40% */}
+                <div className="relative w-full overflow-hidden" style={{ height: 190 }}>
+                  <motion.div
+                    className="flex flex-col gap-1 absolute w-full"
+                    animate={{ y: [0, -190] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                  >
+                    {MOBILE_ERRORS.map((err, i) => (
+                      <div
+                        key={i}
+                        className="w-full rounded-lg border p-2 flex items-start gap-2"
+                        style={{
+                          background: "rgba(30,10,10,0.7)",
+                          borderColor: "rgba(239,68,68,0.3)",
+                          boxShadow: "0 0 8px rgba(239,68,68,0.1)",
+                        }}
+                      >
+                        <AlertTriangle size={12} className="text-red-400 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <div className="text-[10px] font-mono font-bold text-red-400">{err.label}</div>
+                          <div className="text-[8px] font-mono text-red-700 mt-0.5">{err.sub}</div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </motion.div>
-              </div>
-
-              {/* Label */}
-              <motion.div
-                className="mt-4 flex items-center gap-2"
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                <span className="text-xs font-mono tracking-widest text-red-500 uppercase">Manual Chaos · Active</span>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ── MOBILE PHASE 2: The Core Scan ─────────────────────────────── */}
-        <AnimatePresence mode="wait">
-          {isP2 && (
-            <motion.div
-              key="m-p2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-0 flex flex-col items-center justify-center px-6 gap-8"
-            >
-              {/* Blue ambient */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: "radial-gradient(circle at 50% 30%, rgba(59,130,246,0.18) 0%, transparent 65%)" }}
-              />
-
-              {/* CPU icon — large, glowing */}
-              <motion.div
-                className="relative flex items-center justify-center rounded-full z-10"
-                style={{
-                  width: 88,
-                  height: 88,
-                  background: "radial-gradient(circle at 35% 35%, #1e3a6e 0%, #0b1120 70%)",
-                  border: "1px solid rgba(59,130,246,0.5)",
-                  boxShadow: "0 0 30px rgba(59,130,246,0.4), 0 0 60px rgba(59,130,246,0.15)",
-                }}
-                animate={{
-                  scale: [1, 1.06, 1],
-                  boxShadow: [
-                    "0 0 20px rgba(59,130,246,0.3)",
-                    "0 0 45px rgba(59,130,246,0.6)",
-                    "0 0 20px rgba(59,130,246,0.3)",
-                  ],
-                }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <Cpu size={36} className="text-blue-300" style={{ filter: "drop-shadow(0 0 8px rgba(147,197,253,0.8))" }} />
-              </motion.div>
-
-              {/* Data file block with laser scan */}
-              <div className="relative w-full rounded-2xl border overflow-hidden" style={{
-                background: "rgba(8,18,40,0.8)",
-                borderColor: "rgba(59,130,246,0.3)",
-                boxShadow: "0 0 20px rgba(59,130,246,0.1)",
-              }}>
-                <div className="px-5 py-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <FileText size={16} className="text-blue-400" />
-                    <span className="text-sm font-mono font-bold text-blue-300">data_batch_4821.json</span>
-                  </div>
-                  <div className="space-y-2">
-                    {[90, 70, 85, 55].map((w, i) => (
-                      <div key={i} className="h-2 rounded-full" style={{ width: `${w}%`, background: "rgba(59,130,246,0.25)", border: "1px solid rgba(59,130,246,0.2)" }} />
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
 
-                {/* Laser sweep */}
+                {/* Label */}
                 <motion.div
-                  className="absolute left-0 right-0 h-[2px] pointer-events-none"
-                  style={{
-                    background: "linear-gradient(90deg, transparent, rgba(99,179,255,0.9), rgba(147,210,255,1), rgba(99,179,255,0.9), transparent)",
-                    boxShadow: "0 0 10px rgba(99,179,255,0.8), 0 0 24px rgba(59,130,246,0.4)",
-                  }}
-                  animate={{ top: ["0%", "100%", "0%"] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                />
-              </div>
-
-              <span className="text-xs font-mono tracking-[0.25em] text-blue-400 uppercase z-10">AI Prism · Scanning</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ── MOBILE PHASE 3: The Action Log ────────────────────────────── */}
-        <AnimatePresence mode="wait">
-          {isP3 && (
-            <motion.div
-              key="m-p3"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-0 flex flex-col items-center justify-center px-5 gap-4"
-            >
-              {/* Emerald ambient */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: "radial-gradient(circle at 50% 50%, rgba(16,185,129,0.16) 0%, transparent 65%)" }}
-              />
-
-              {/* Header */}
-              <div className="flex items-center gap-2 z-10">
-                <motion.div
-                  className="w-2.5 h-2.5 rounded-full bg-emerald-400"
-                  animate={{ scale: [1, 1.4, 1], opacity: [1, 0.5, 1] }}
-                  transition={{ duration: 1.2, repeat: Infinity }}
-                  style={{ boxShadow: "0 0 8px #10b981" }}
-                />
-                <span className="text-xs font-mono font-bold tracking-widest text-emerald-400 uppercase">AI Engine · Live</span>
-              </div>
-
-              {/* Task rows */}
-              <div className="w-full space-y-3 z-10">
-                {MOBILE_TASKS.map((task, i) => (
-                  <motion.div
-                    key={i}
-                    className="w-full rounded-xl border flex items-center gap-4 px-4 py-4"
-                    style={{
-                      background: "rgba(5,25,20,0.75)",
-                      borderColor: "rgba(16,185,129,0.3)",
-                      boxShadow: "0 0 14px rgba(16,185,129,0.1)",
-                    }}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: i * 0.18, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <motion.div
-                      animate={{ scale: [1, 1.35, 1], opacity: [0.7, 1, 0.7] }}
-                      transition={{ duration: 1.4, repeat: Infinity, delay: i * 0.4 }}
-                    >
-                      <CheckCircle2
-                        size={22}
-                        className="text-emerald-400 flex-shrink-0"
-                        style={{ filter: "drop-shadow(0 0 5px #10b981)" }}
-                      />
-                    </motion.div>
-                    <span className="text-base font-mono font-semibold text-emerald-200 flex-1">{task.label}</span>
-                    <span className="text-xs font-mono text-emerald-600">{task.time}</span>
-                  </motion.div>
-                ))}
-              </div>
-
-              <span className="text-xs font-mono tracking-[0.25em] text-emerald-500 uppercase z-10">Processing · 100% Automated</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ── MOBILE PHASE 4: The Micro-Grid ────────────────────────────── */}
-        <AnimatePresence mode="wait">
-          {isP4 && (
-            <motion.div
-              key="m-p4"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-0 flex flex-col items-center justify-center px-6 gap-8"
-            >
-              {/* Purple ambient */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: "radial-gradient(circle at 50% 50%, rgba(99,102,241,0.2) 0%, transparent 65%)" }}
-              />
-
-              {/* 2×2 grid */}
-              <div className="grid gap-4 z-10" style={{ gridTemplateColumns: "repeat(2, 1fr)" }}>
-                {[0, 1, 2, 3].map((i) => (
-                  <motion.div
-                    key={i}
-                    className="rounded-2xl border flex flex-col items-center justify-center gap-2"
-                    style={{
-                      width: 110,
-                      height: 110,
-                      background: "rgba(20,15,45,0.8)",
-                      borderColor: "rgba(99,102,241,0.4)",
-                    }}
-                    animate={{
-                      boxShadow: [
-                        "0 0 12px rgba(99,102,241,0.15)",
-                        "0 0 32px rgba(99,102,241,0.5)",
-                        "0 0 12px rgba(99,102,241,0.15)",
-                      ],
-                      borderColor: [
-                        "rgba(99,102,241,0.3)",
-                        "rgba(139,92,246,0.75)",
-                        "rgba(99,102,241,0.3)",
-                      ],
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: i * 0.35 }}
-                  >
-                    <Cpu size={24} className="text-indigo-400" style={{ filter: "drop-shadow(0 0 6px rgba(99,102,241,0.7))" }} />
-                    <div className="flex gap-1 items-end h-5">
-                      {[0, 1, 2].map((d) => (
-                        <motion.div
-                          key={d}
-                          className="w-1.5 rounded-full bg-indigo-500"
-                          animate={{ height: ["4px", "14px", "4px"] }}
-                          transition={{ duration: 0.8, repeat: Infinity, delay: d * 0.18 + i * 0.1, ease: "easeInOut" }}
-                        />
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Big typography */}
-              <motion.div
-                className="flex flex-col items-center z-10"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <span
-                  className="text-5xl font-light font-mono text-white tracking-tighter"
-                  style={{ textShadow: "0 0 24px rgba(139,92,246,0.9)" }}
+                  className="mt-3 flex items-center gap-1.5"
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
                 >
-                  1,000+
-                </span>
-                <span className="text-xs font-mono tracking-[0.25em] text-indigo-400 uppercase mt-1">
-                  Concurrent Executions
-                </span>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ── MOBILE PHASE 5 / CTA: The Pulse Button ────────────────────── */}
-        <AnimatePresence mode="wait">
-          {isCTA && (
-            <motion.div
-              key="m-cta"
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.05 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-0 flex flex-col items-center justify-center gap-6"
-            >
-              {/* Violet ambient */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: "radial-gradient(circle at 50% 50%, rgba(139,92,246,0.2) 0%, transparent 60%)" }}
-              />
-
-              {/* Radar rings */}
-              {[0, 1, 2, 3].map((r) => (
-                <motion.div
-                  key={r}
-                  className="absolute rounded-full border"
-                  style={{
-                    borderColor: `rgba(139,92,246,${0.35 - r * 0.07})`,
-                    width: 110 + r * 55,
-                    height: 110 + r * 55,
-                  }}
-                  animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0, 0.6] }}
-                  transition={{ duration: 2.8, repeat: Infinity, ease: "easeOut", delay: r * 0.6 }}
-                />
-              ))}
-
-              {/* Central orb */}
-              <motion.div
-                className="relative rounded-full flex items-center justify-center cursor-pointer z-10"
-                style={{
-                  width: 100,
-                  height: 100,
-                  background: "radial-gradient(circle at 35% 35%, rgba(139,92,246,0.6) 0%, rgba(30,15,60,0.95) 70%)",
-                  border: "1px solid rgba(139,92,246,0.5)",
-                  boxShadow: "0 0 40px rgba(139,92,246,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
-                }}
-                animate={{
-                  scale: [1, 1.07, 1],
-                  boxShadow: [
-                    "0 0 30px rgba(139,92,246,0.3)",
-                    "0 0 55px rgba(139,92,246,0.65)",
-                    "0 0 30px rgba(139,92,246,0.3)",
-                  ],
-                }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <motion.div
-                  animate={{ x: [-3, 3, -3] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <ArrowLeft size={36} className="text-white" style={{ filter: "drop-shadow(0 0 8px rgba(139,92,246,0.9))" }} />
+                  <div className="w-1 h-1 rounded-full bg-red-500" />
+                  <span className="text-[10px] font-mono tracking-widest text-red-500 uppercase">Manual Chaos · Active</span>
                 </motion.div>
               </motion.div>
+            )}
+          </AnimatePresence>
 
-              {/* Text */}
+          {/* ── MOBILE PHASE 2: The Core Scan ─────────────────────────────── */}
+          <AnimatePresence mode="wait">
+            {isP2 && (
               <motion.div
-                className="flex flex-col items-center z-10"
-                initial={{ opacity: 0, y: 8 }}
+                key="m-p2"
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-0 flex flex-col items-center justify-center px-5 gap-4"
               >
-                <span
-                  className="text-xl font-semibold text-white tracking-wide"
-                  style={{ textShadow: "0 0 20px rgba(139,92,246,0.6)" }}
-                >
-                  Initiate System
-                </span>
-                <span className="text-sm font-mono text-indigo-400 mt-1 tracking-widest uppercase">
-                  Awaiting your command
-                </span>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                {/* Blue ambient */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ background: "radial-gradient(circle at 50% 30%, rgba(59,130,246,0.15) 0%, transparent 65%)" }}
+                />
 
+                {/* CPU icon — compact */}
+                <motion.div
+                  className="relative flex items-center justify-center rounded-full z-10"
+                  style={{
+                    width: 52,
+                    height: 52,
+                    background: "radial-gradient(circle at 35% 35%, #1e3a6e 0%, #0b1120 70%)",
+                    border: "1px solid rgba(59,130,246,0.5)",
+                    boxShadow: "0 0 16px rgba(59,130,246,0.35)",
+                  }}
+                  animate={{
+                    scale: [1, 1.05, 1],
+                    boxShadow: [
+                      "0 0 10px rgba(59,130,246,0.25)",
+                      "0 0 24px rgba(59,130,246,0.55)",
+                      "0 0 10px rgba(59,130,246,0.25)",
+                    ],
+                  }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <Cpu size={20} className="text-blue-300" style={{ filter: "drop-shadow(0 0 5px rgba(147,197,253,0.8))" }} />
+                </motion.div>
+
+                {/* Data file block — sleek and compact */}
+                <div className="relative w-full rounded-lg border overflow-hidden" style={{
+                  background: "rgba(8,18,40,0.85)",
+                  borderColor: "rgba(59,130,246,0.25)",
+                  boxShadow: "0 0 10px rgba(59,130,246,0.08)",
+                }}>
+                  <div className="px-2.5 py-2">
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <FileText size={9} className="text-blue-400" />
+                      <span className="text-[9px] font-mono font-bold text-blue-300">data_batch_4821.json</span>
+                    </div>
+                    <div className="space-y-1">
+                      {[90, 70, 85, 55].map((w, i) => (
+                        <div key={i} className="h-px rounded-full" style={{ width: `${w}%`, background: "rgba(59,130,246,0.28)", border: "none" }} />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Razor-thin laser sweep — 1px */}
+                  <motion.div
+                    className="absolute left-0 right-0 h-px pointer-events-none"
+                    style={{
+                      background: "linear-gradient(90deg, transparent, rgba(99,179,255,0.95), rgba(147,210,255,1), rgba(99,179,255,0.95), transparent)",
+                      boxShadow: "0 0 6px rgba(99,179,255,0.9), 0 0 16px rgba(59,130,246,0.5)",
+                    }}
+                    animate={{ top: ["0%", "100%", "0%"] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                </div>
+
+                <span className="text-[10px] font-mono tracking-[0.25em] text-blue-400 uppercase z-10">AI Prism · Scanning</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* ── MOBILE PHASE 3: The Action Log ────────────────────────────── */}
+          <AnimatePresence mode="wait">
+            {isP3 && (
+              <motion.div
+                key="m-p3"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-0 flex flex-col items-center justify-center px-4 gap-3"
+              >
+                {/* Emerald ambient */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ background: "radial-gradient(circle at 50% 50%, rgba(16,185,129,0.14) 0%, transparent 65%)" }}
+                />
+
+                {/* Header */}
+                <div className="flex items-center gap-1.5 z-10">
+                  <motion.div
+                    className="w-2 h-2 rounded-full bg-emerald-400"
+                    animate={{ scale: [1, 1.4, 1], opacity: [1, 0.5, 1] }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
+                    style={{ boxShadow: "0 0 6px #10b981" }}
+                  />
+                  <span className="text-[10px] font-mono font-bold tracking-widest text-emerald-400 uppercase">AI Engine · Live</span>
+                </div>
+
+                {/* Task rows — constrained max width, compact */}
+                <div className="w-full max-w-[240px] space-y-1.5 z-10">
+                  {MOBILE_TASKS.map((task, i) => (
+                    <motion.div
+                      key={i}
+                      className="w-full rounded-md border flex items-center gap-2 px-2.5 py-1.5"
+                      style={{
+                        background: "rgba(5,25,20,0.8)",
+                        borderColor: "rgba(16,185,129,0.28)",
+                        boxShadow: "0 0 8px rgba(16,185,129,0.07)",
+                      }}
+                      initial={{ x: -12, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: i * 0.15, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <motion.div
+                        animate={{ scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }}
+                        transition={{ duration: 1.4, repeat: Infinity, delay: i * 0.4 }}
+                      >
+                        <CheckCircle2
+                          size={10}
+                          className="text-emerald-400 flex-shrink-0 w-3 h-3"
+                          style={{ filter: "drop-shadow(0 0 3px #10b981)" }}
+                        />
+                      </motion.div>
+                      <span className="text-[10px] font-mono font-semibold text-emerald-200 flex-1">{task.label}</span>
+                      <span className="text-[9px] font-mono text-emerald-600">{task.time}</span>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <span className="text-[10px] font-mono tracking-[0.25em] text-emerald-500 uppercase z-10">Processing · 100% Automated</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* ── MOBILE PHASE 4: The Micro-Grid ────────────────────────────── */}
+          <AnimatePresence mode="wait">
+            {isP4 && (
+              <motion.div
+                key="m-p4"
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.92 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-0 flex flex-col items-center justify-center px-4 gap-5"
+              >
+                {/* Purple ambient */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ background: "radial-gradient(circle at 50% 50%, rgba(99,102,241,0.18) 0%, transparent 65%)" }}
+                />
+
+                {/* Tight 3×3 grid */}
+                <div className="grid gap-1.5 z-10" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+                  {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                    <motion.div
+                      key={i}
+                      className="rounded-lg border flex flex-col items-center justify-center gap-0.5"
+                      style={{
+                        width: 56,
+                        height: 56,
+                        background: "rgba(20,15,45,0.85)",
+                        borderColor: "rgba(99,102,241,0.35)",
+                      }}
+                      animate={{
+                        boxShadow: [
+                          "0 0 6px rgba(99,102,241,0.12)",
+                          "0 0 16px rgba(99,102,241,0.45)",
+                          "0 0 6px rgba(99,102,241,0.12)",
+                        ],
+                        borderColor: [
+                          "rgba(99,102,241,0.25)",
+                          "rgba(139,92,246,0.7)",
+                          "rgba(99,102,241,0.25)",
+                        ],
+                      }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: (i % 3) * 0.18 + Math.floor(i / 3) * 0.12 }}
+                    >
+                      <Cpu size={12} className="text-indigo-400" style={{ filter: "drop-shadow(0 0 3px rgba(99,102,241,0.7))" }} />
+                      <div className="flex gap-0.5 items-end h-2">
+                        {[0, 1, 2].map((d) => (
+                          <motion.div
+                            key={d}
+                            className="w-px rounded-full bg-indigo-500"
+                            animate={{ height: ["2px", "6px", "2px"] }}
+                            transition={{ duration: 0.7, repeat: Infinity, delay: d * 0.15 + i * 0.05, ease: "easeInOut" }}
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Elegant typography — light, not massive */}
+                <motion.div
+                  className="flex flex-col items-center z-10"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <span
+                    className="text-3xl font-light font-mono text-white tracking-tighter"
+                    style={{ textShadow: "0 0 18px rgba(139,92,246,0.85)" }}
+                  >
+                    1,000+
+                  </span>
+                  <span className="text-[10px] font-mono tracking-[0.25em] text-indigo-400 uppercase mt-0.5">
+                    Concurrent Executions
+                  </span>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* ── MOBILE PHASE 5 / CTA: The Pulse Button ────────────────────── */}
+          <AnimatePresence mode="wait">
+            {isCTA && (
+              <motion.div
+                key="m-cta"
+                initial={{ opacity: 0, scale: 0.88 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.04 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-0 flex flex-col items-center justify-center gap-4"
+              >
+                {/* Violet ambient */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ background: "radial-gradient(circle at 50% 50%, rgba(139,92,246,0.18) 0%, transparent 60%)" }}
+                />
+
+                {/* Radar rings — smaller radius, contained inside widget */}
+                {[0, 1, 2].map((r) => (
+                  <motion.div
+                    key={r}
+                    className="absolute rounded-full border"
+                    style={{
+                      borderColor: `rgba(139,92,246,${0.35 - r * 0.09})`,
+                      width: 60 + r * 30,
+                      height: 60 + r * 30,
+                    }}
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.55, 0, 0.55] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: r * 0.55 }}
+                  />
+                ))}
+
+                {/* Central orb — compact */}
+                <motion.div
+                  className="relative rounded-full flex items-center justify-center cursor-pointer z-10"
+                  style={{
+                    width: 58,
+                    height: 58,
+                    background: "radial-gradient(circle at 35% 35%, rgba(139,92,246,0.6) 0%, rgba(30,15,60,0.95) 70%)",
+                    border: "1px solid rgba(139,92,246,0.5)",
+                    boxShadow: "0 0 22px rgba(139,92,246,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
+                  }}
+                  animate={{
+                    scale: [1, 1.06, 1],
+                    boxShadow: [
+                      "0 0 16px rgba(139,92,246,0.3)",
+                      "0 0 32px rgba(139,92,246,0.6)",
+                      "0 0 16px rgba(139,92,246,0.3)",
+                    ],
+                  }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <motion.div
+                    animate={{ x: [-2, 2, -2] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <ArrowLeft size={20} className="text-white" style={{ filter: "drop-shadow(0 0 5px rgba(139,92,246,0.9))" }} />
+                  </motion.div>
+                </motion.div>
+
+                {/* Text */}
+                <motion.div
+                  className="flex flex-col items-center z-10"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <span
+                    className="text-sm font-semibold text-white tracking-wide"
+                    style={{ textShadow: "0 0 16px rgba(139,92,246,0.6)" }}
+                  >
+                    Initiate System
+                  </span>
+                  <span className="text-[10px] font-mono text-indigo-400 mt-0.5 tracking-widest uppercase">
+                    Awaiting your command
+                  </span>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+        </div>
       </div>
     </div>
   );
