@@ -147,8 +147,8 @@ const HeroSection = () => {
         </div>
 
         {/* RIGHT COLUMN: The Orbital Command Center (Desktop Only) */}
-        <div className="hidden lg:flex relative h-[800px] w-full items-center justify-center perspective-[1000px]">
-          <div className="relative w-[800px] h-[800px] flex items-center justify-center transform-style-3d scale-90">
+        <div className="hidden lg:flex relative h-[800px] w-full items-center justify-center perspective-[1200px]">
+          <div className="relative w-[800px] h-[800px] flex items-center justify-center [transform-style:preserve-3d] scale-90">
             <OrbitalRings />
             <OrbitalCenter />
             <OrbitalSatellites />
