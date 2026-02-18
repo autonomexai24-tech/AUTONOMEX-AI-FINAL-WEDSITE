@@ -212,7 +212,7 @@ const services: ServiceConfig[] = [
       "Your digital storefront. Fast, professional websites designed to rank on Google and bring new clients to your door.",
     theme: "pink",
     Artwork: WebDevArt,
-    href: "/services/web-development",
+    href: "/services/web-develop",
   },
   {
     title: "Custom Mobile Apps",
@@ -220,7 +220,7 @@ const services: ServiceConfig[] = [
       "Your own business app, made simple. Track manufacturing inventory, manage staff, or let customers buy directly.",
     theme: "emerald",
     Artwork: AppDevArt,
-    href: "/services/app-development",
+    href: "/services/mobile-app",
   },
   {
     title: "Video Ads & Marketing",
