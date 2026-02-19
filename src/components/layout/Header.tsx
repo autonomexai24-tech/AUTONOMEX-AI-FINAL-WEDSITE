@@ -45,8 +45,8 @@ export default function Header() {
 
   return (
     <>
-    <header
-      className={`
+      <header
+        className={`
         fixed top-6 left-1/2 -translate-x-1/2 z-50 
         w-[90%] md:w-[85%] max-w-5xl 
         rounded-full border border-white/40 
@@ -55,71 +55,68 @@ export default function Header() {
         transition-transform duration-300 ease-in-out
         ${isVisible ? "translate-y-0" : "-translate-y-[200%]"}
       `}
-    >
-      <div className="flex items-center justify-between px-6 py-3">
-        {/* LOGO */}
-        <Link to="/" className="flex items-center gap-1 cursor-pointer group">
-          <span className="font-serif text-xl md:text-2xl font-semibold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
-            Autonomex AI
-          </span>
-          <span className="text-blue-600 text-3xl leading-none">.</span>
-        </Link>
-
-        {/* DESKTOP NAV (Hidden on Mobile) */}
-        <nav className="hidden md:flex items-center gap-1">
-          <Link
-            to="/"
-            className="text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60 px-4 py-2 rounded-full transition-all duration-300"
-          >
-            Home
+      >
+        <div className="flex items-center justify-between px-6 py-3">
+          {/* LOGO */}
+          <Link to="/" className="flex items-center transition-all duration-300 hover:opacity-80 hover:scale-[0.98] active:scale-95">
+            <img src="/logo.png" alt="Autonomex AI Logo" className="h-12 md:h-14 w-auto object-contain" />
           </Link>
-          <span className="text-sm font-medium text-slate-400 px-4 py-2 rounded-full flex items-center gap-1.5 cursor-default pointer-events-none select-none">
-            Product
-            <span className="text-[9px] font-mono font-bold uppercase tracking-wider bg-blue-50 text-blue-500 px-1.5 py-0.5 rounded-full leading-none">
-              Soon
+
+          {/* DESKTOP NAV (Hidden on Mobile) */}
+          <nav className="hidden md:flex items-center gap-1">
+            <Link
+              to="/"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60 px-4 py-2 rounded-full transition-all duration-300"
+            >
+              Home
+            </Link>
+            <span className="text-sm font-medium text-slate-400 px-4 py-2 rounded-full flex items-center gap-1.5 cursor-default pointer-events-none select-none">
+              Product
+              <span className="text-[9px] font-mono font-bold uppercase tracking-wider bg-blue-50 text-blue-500 px-1.5 py-0.5 rounded-full leading-none">
+                Soon
+              </span>
             </span>
-          </span>
-          <a
-            href="/#services"
-            onClick={(e) => {
-              if (window.location.pathname === "/") {
-                e.preventDefault();
-                document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
-              }
-            }}
-            className="text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60 px-4 py-2 rounded-full transition-all duration-300"
-          >
-            Services
-          </a>
-          <Link
-            to="/about"
-            className="text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60 px-4 py-2 rounded-full transition-all duration-300"
-          >
-            About
-          </Link>
-        </nav>
+            <a
+              href="/#services"
+              onClick={(e) => {
+                if (window.location.pathname === "/") {
+                  e.preventDefault();
+                  document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60 px-4 py-2 rounded-full transition-all duration-300"
+            >
+              Services
+            </a>
+            <Link
+              to="/about"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60 px-4 py-2 rounded-full transition-all duration-300"
+            >
+              About
+            </Link>
+          </nav>
 
-        {/* ACTIONS */}
-        <div className="flex items-center gap-4">
-          {/* Desktop Call to Action (Hidden on Mobile to save space) */}
-          <Link to="/contact">
-            <Button className="hidden md:inline-flex rounded-full bg-slate-900 text-white hover:bg-slate-800 px-6 py-2 text-xs font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
-              Book Strategy
-            </Button>
-          </Link>
+          {/* ACTIONS */}
+          <div className="flex items-center gap-4">
+            {/* Desktop Call to Action (Hidden on Mobile to save space) */}
+            <Link to="/contact">
+              <Button className="hidden md:inline-flex rounded-full bg-slate-900 text-white hover:bg-slate-800 px-6 py-2 text-xs font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
+                Book Strategy
+              </Button>
+            </Link>
 
-          {/* Mobile Menu Trigger */}
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden p-2 text-slate-600 hover:text-slate-900 transition-colors"
-            aria-label="Open menu"
-          >
-            <Menu size={24} />
-          </button>
+            {/* Mobile Menu Trigger */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden p-2 text-slate-600 hover:text-slate-900 transition-colors"
+              aria-label="Open menu"
+            >
+              <Menu size={24} />
+            </button>
+          </div>
         </div>
-      </div>
 
-    </header>
+      </header>
 
       {/* Enterprise Mobile Drawer */}
       <AnimatePresence>
@@ -133,11 +130,8 @@ export default function Header() {
           >
             {/* Drawer Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200/80">
-              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-1">
-                <span className="font-serif text-xl font-semibold tracking-tight text-slate-900">
-                  Autonomex AI
-                </span>
-                <span className="text-blue-600 text-2xl leading-none">.</span>
+              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center">
+                <img src="/logo.png" alt="Autonomex AI Logo" className="h-10 w-auto object-contain" />
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
