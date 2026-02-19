@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronRight, Lock } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import logoImg from "../../assets/logo.png";
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -59,7 +60,7 @@ export default function Header() {
         <div className="flex items-center justify-between px-6 py-3">
           {/* LOGO */}
           <Link to="/" className="flex items-center transition-all duration-300 hover:opacity-80 hover:scale-[0.98] active:scale-95">
-            <img src="/logo.png" alt="Autonomex AI Logo" className="h-12 md:h-14 w-auto object-contain" />
+            <img src={logoImg} alt="Autonomex AI Logo" className="h-12 md:h-14 w-auto object-contain" />
           </Link>
 
           {/* DESKTOP NAV (Hidden on Mobile) */}
@@ -131,7 +132,7 @@ export default function Header() {
             {/* Drawer Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200/80">
               <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center">
-                <img src="/logo.png" alt="Autonomex AI Logo" className="h-10 w-auto object-contain" />
+                <img src={logoImg} alt="Autonomex AI Logo" className="h-10 w-auto object-contain" />
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
