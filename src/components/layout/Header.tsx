@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import logoImg from "../../assets/logo.png";
+import logoIcon from "../../assets/logo-icon.png";
+import logoText from "../../assets/logo-text.png";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronRight, Lock } from "lucide-react";
@@ -59,8 +60,9 @@ export default function Header() {
       >
         <div className="flex items-center justify-between px-6 py-3">
           {/* LOGO */}
-          <Link to="/" className="flex items-center transition-all duration-300 hover:opacity-80 hover:scale-[0.98] active:scale-95">
-            <img src={logoImg} alt="Autonomex AI Logo" className="h-12 md:h-14 w-auto object-contain transition-all duration-300 hover:opacity-80 hover:scale-[0.98] active:scale-95" />
+          <Link to="/" className="flex flex-row items-center gap-2 md:gap-3 transition-all duration-300 hover:opacity-80 hover:scale-[0.98] active:scale-95">
+            <img src={logoIcon} alt="Autonomex AI Icon" className="h-7 md:h-9 w-auto object-contain shrink-0" />
+            <img src={logoText} alt="Autonomex AI" className="h-3 md:h-4 w-auto object-contain shrink-0 mt-[2px]" />
           </Link>
 
           {/* DESKTOP NAV (Hidden on Mobile) */}
@@ -131,8 +133,9 @@ export default function Header() {
           >
             {/* Drawer Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200/80">
-              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center">
-                <img src={logoImg} alt="Autonomex AI Logo" className="h-10 w-auto object-contain" />
+              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex flex-row items-center gap-2">
+                <img src={logoIcon} alt="Autonomex AI Icon" className="h-7 w-auto object-contain shrink-0" />
+                <img src={logoText} alt="Autonomex AI" className="h-3 w-auto object-contain shrink-0 mt-[2px]" />
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
