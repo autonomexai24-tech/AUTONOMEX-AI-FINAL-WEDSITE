@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import logoIcon from "../../assets/logo-icon.png";
-import logoText from "../../assets/logo-text.png";
+import logoIcon from "../../assets/brand-icon.png";
+import logoText from "../../assets/brand-text.png";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronRight, Lock } from "lucide-react";
