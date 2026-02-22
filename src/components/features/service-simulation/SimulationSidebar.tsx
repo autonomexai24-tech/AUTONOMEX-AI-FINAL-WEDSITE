@@ -212,6 +212,7 @@ export default function SimulationSidebar({ serviceData, serviceId, isPending = 
               </motion.a>
 
               <motion.button
+                type="button"
                 onClick={() => {
                   handleAnalytics("Booking");
                   navigate("/book-strategy");

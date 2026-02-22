@@ -11,23 +11,30 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let ticking = false;
     const controlNavbar = () => {
-      if (typeof window !== "undefined") {
-        const currentScrollY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (typeof window !== "undefined") {
+            const currentScrollY = window.scrollY;
 
-        if (currentScrollY === 0) {
-          setIsVisible(true);
-        } else if (currentScrollY > lastScrollY) {
-          setIsVisible(false);
-        } else {
-          setIsVisible(true);
-        }
+            if (currentScrollY === 0) {
+              setIsVisible(true);
+            } else if (currentScrollY > lastScrollY) {
+              setIsVisible(false);
+            } else {
+              setIsVisible(true);
+            }
 
-        setLastScrollY(currentScrollY);
+            setLastScrollY(currentScrollY);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    window.addEventListener("scroll", controlNavbar);
+    window.addEventListener("scroll", controlNavbar, { passive: true });
     return () => window.removeEventListener("scroll", controlNavbar);
   }, [lastScrollY]);
 
@@ -157,6 +164,7 @@ export default function Header() {
             </Link>
 
             <button
+              type="button"
               onClick={() => setIsOpen(true)}
               className="md:hidden p-2 text-slate-600 hover:text-slate-900 transition-colors"
               aria-label="Open menu"
@@ -196,6 +204,7 @@ export default function Header() {
               />
             </Link>
             <button
+              type="button"
               onClick={() => setIsOpen(false)}
               className="p-2 -mr-2 text-slate-400 hover:text-slate-900 transition-colors flex items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
               aria-label="Close menu"
@@ -217,6 +226,7 @@ export default function Header() {
 
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
               <button
+                type="button"
                 onClick={() => setIsProductExpanded(!isProductExpanded)}
                 className="w-full px-5 py-4 flex justify-between items-center text-lg font-medium hover:bg-slate-50 transition outline-none focus-visible:ring-2 focus-visible:ring-slate-900 group"
               >
@@ -285,12 +295,12 @@ export default function Header() {
           {/* BOTTOM CTA */}
           <div className="px-6 pt-6 pb-8 bg-white border-t border-slate-100 flex flex-col gap-3 shrink-0">
             <Link to="/book-strategy" onClick={() => setIsOpen(false)} className="w-full outline-none rounded-xl focus-visible:ring-2 focus-visible:ring-[#0B1120] focus-visible:ring-offset-2">
-              <button className="w-full bg-[#0B1120] text-white rounded-xl py-4 font-semibold text-center hover:bg-slate-800 transition shadow-lg shadow-slate-900/10 outline-none">
+              <button type="button" className="w-full bg-[#0B1120] text-white rounded-xl py-4 font-semibold text-center hover:bg-slate-800 transition shadow-lg shadow-slate-900/10 outline-none">
                 Fill the Details
               </button>
             </Link>
             <a href="tel:+917676808950" onClick={() => setIsOpen(false)} className="w-full outline-none rounded-xl focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2">
-              <button className="w-full bg-white border border-slate-300 text-slate-700 rounded-xl py-4 font-medium text-center hover:bg-slate-50 transition outline-none">
+              <button type="button" className="w-full bg-white border border-slate-300 text-slate-700 rounded-xl py-4 font-medium text-center hover:bg-slate-50 transition outline-none">
                 Call Us
               </button>
             </a>
