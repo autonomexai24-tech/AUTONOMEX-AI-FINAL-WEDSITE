@@ -4,10 +4,10 @@ import { motion, useInView } from "framer-motion";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
-// ─── Easing ─────────────────────────────────────────────────────────────────
+// ─── Single easing constant — used everywhere ────────────────────────────────
 const EASE = [0.25, 1, 0.5, 1] as const;
 
-// ─── Custom hook: scroll-triggered inView with once ─────────────────────────
+// ─── Scroll-triggered inView, fires once ────────────────────────────────────
 function useSectionInView(threshold = 0.15) {
     const ref = useRef<HTMLDivElement>(null);
     const inView = useInView(ref, { once: true, amount: threshold });
@@ -15,7 +15,7 @@ function useSectionInView(threshold = 0.15) {
 }
 
 // ─── Typewriter hook ─────────────────────────────────────────────────────────
-function useTypewriter(text: string, speed = 55, delay = 1200) {
+function useTypewriter(text: string, speed = 55, startDelay = 800) {
     const [displayed, setDisplayed] = useState("");
     const [done, setDone] = useState(false);
 
@@ -31,22 +31,49 @@ function useTypewriter(text: string, speed = 55, delay = 1200) {
                 }
             }, speed);
             return () => clearInterval(interval);
-        }, delay);
+        }, startDelay);
         return () => clearTimeout(timeout);
-    }, [text, speed, delay]);
+    }, [text, speed, startDelay]);
 
     return { displayed, done };
 }
 
+// ─── Opacity-only fade wrapper ───────────────────────────────────────────────
+function Fade({
+    children,
+    delay = 0,
+    inView = true,
+    className,
+}: {
+    children: React.ReactNode;
+    delay?: number;
+    inView?: boolean;
+    className?: string;
+}) {
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.8, ease: EASE, delay }}
+            className={className}
+        >
+            {children}
+        </motion.div>
+    );
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
-// SECTION 1 – SYSTEM BOOT HERO
+// SECTION 1 — SYSTEM BOOT HERO
 // ─────────────────────────────────────────────────────────────────────────────
 function SystemBootHero() {
     const { displayed, done } = useTypewriter("Initializing Autonomex Systems...");
 
     return (
-        <section id="section-boot" className="relative min-h-screen flex flex-col items-center justify-center bg-[#080b0e] overflow-hidden">
-            {/* Subtle radial glow */}
+        <section
+            id="section-boot"
+            className="relative min-h-screen flex flex-col items-center justify-center bg-[#080b0e] overflow-hidden"
+        >
+            {/* Radial glow */}
             <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
@@ -67,23 +94,18 @@ function SystemBootHero() {
 
             <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-12 text-center">
                 {/* System label */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.8, ease: EASE, delay: 0.2 }}
-                    className="mb-8"
-                >
+                <Fade delay={0.1} className="mb-8">
                     <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-teal-500/70">
                         <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
                         AUTONOMEX / SYSTEM_INIT
                     </span>
-                </motion.div>
+                </Fade>
 
-                {/* Headline */}
+                {/* Headline — opacity only */}
                 <motion.h1
-                    initial={{ opacity: 0, y: 18 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1.1, ease: EASE, delay: 0.5 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.8, ease: EASE, delay: 0.3 }}
                     className="text-5xl md:text-7xl lg:text-8xl font-sans font-bold text-white tracking-tight leading-[1.05] mb-10"
                 >
                     Built in the
@@ -93,52 +115,36 @@ function SystemBootHero() {
                     </span>
                 </motion.h1>
 
-                {/* Typewriter */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.6, ease: EASE, delay: 0.9 }}
-                    className="h-7 flex items-center justify-center"
-                >
+                {/* Typewriter line */}
+                <Fade delay={0.55} className="h-7 flex items-center justify-center">
                     <span className="font-mono text-sm text-slate-400 tracking-wide">
                         {displayed}
                         <span
-                            className={`inline-block w-[2px] h-[1em] bg-teal-400 ml-0.5 align-middle ${done ? "animate-[blink_1s_step-end_infinite]" : ""
-                                }`}
+                            className="inline-block w-[2px] h-[1em] bg-teal-400 ml-0.5 align-middle animate-[blink_1s_step-end_infinite]"
                         />
                     </span>
-                </motion.div>
+                </Fade>
             </div>
 
-            {/* Bottom rule */}
-            <motion.div
-                initial={{ scaleX: 0, opacity: 0 }}
-                animate={{ scaleX: 1, opacity: 1 }}
-                transition={{ duration: 1.2, ease: EASE, delay: 1.8 }}
-                className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-500/30 to-transparent origin-left"
-            />
+            {/* Bottom separator */}
+            <Fade delay={0.8} className="absolute bottom-0 left-0 right-0">
+                <div className="h-px bg-gradient-to-r from-transparent via-teal-500/30 to-transparent" />
+            </Fade>
 
             {/* Scroll indicator */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2.2, duration: 0.8, ease: EASE }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-            >
+            <Fade delay={0.9} className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
                 <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-600">
                     Scroll
                 </span>
                 <div className="w-px h-8 bg-gradient-to-b from-slate-600 to-transparent" />
-            </motion.div>
+            </Fade>
         </section>
     );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SECTION 2 – ARCHITECT AUTHORITY PANEL
+// SECTION 2 — ARCHITECT AUTHORITY PANEL
 // ─────────────────────────────────────────────────────────────────────────────
-
-// ─── Terminal lines (static — all visible after fade-in) ────────────────────
 const TERMINAL_LINES = [
     { key: "ARCHITECT", value: "HARSH HAVANUR" },
     { key: "ROLE", value: "SYSTEMS ENGINEER" },
@@ -156,13 +162,7 @@ function TerminalPanel({ inView }: { inView: boolean }) {
     }, []);
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.9, ease: EASE, delay: 0.4 }}
-            className="relative md:ml-auto w-full"
-        >
-            {/* Panel shell */}
+        <Fade delay={0.3} inView={inView} className="relative md:ml-auto w-full">
             <div
                 className="relative border border-teal-500/20 bg-[#060809] overflow-hidden"
                 style={{
@@ -179,10 +179,10 @@ function TerminalPanel({ inView }: { inView: boolean }) {
                     </span>
                 </div>
 
-                {/* Terminal body */}
+                {/* Lines — static, no reveal sequence */}
                 <div className="px-6 py-8 space-y-[14px]">
                     {TERMINAL_LINES.map((line) => (
-                        <div key={line.key} className="flex items-baseline gap-0">
+                        <div key={line.key} className="flex items-baseline">
                             <span className="font-mono text-[11px] text-slate-600 tracking-wider shrink-0 mr-2">
                                 &gt;
                             </span>
@@ -195,7 +195,7 @@ function TerminalPanel({ inView }: { inView: boolean }) {
                         </div>
                     ))}
 
-                    {/* Blinking prompt cursor */}
+                    {/* Blinking cursor */}
                     <div className="flex items-center gap-2 pt-2">
                         <span className="font-mono text-[11px] text-slate-700">&gt;</span>
                         <span
@@ -205,7 +205,7 @@ function TerminalPanel({ inView }: { inView: boolean }) {
                     </div>
                 </div>
 
-                {/* Status footer */}
+                {/* Footer */}
                 <div className="px-5 py-3 border-t border-teal-500/10 flex items-center justify-between">
                     <span className="font-mono text-[10px] text-slate-700 tracking-wider">
                         AUTONOMEX AI — SYSTEMS DIVISION
@@ -217,15 +217,14 @@ function TerminalPanel({ inView }: { inView: boolean }) {
                 </div>
             </div>
 
-            {/* Corner frame accents */}
+            {/* Corner accents */}
             <div className="absolute -top-px -left-px  w-4 h-4 border-t-2 border-l-2 border-teal-500/50" />
             <div className="absolute -top-px -right-px w-4 h-4 border-t-2 border-r-2 border-teal-500/50" />
             <div className="absolute -bottom-px -left-px  w-4 h-4 border-b-2 border-l-2 border-teal-500/50" />
             <div className="absolute -bottom-px -right-px w-4 h-4 border-b-2 border-r-2 border-teal-500/50" />
-        </motion.div>
+        </Fade>
     );
 }
-
 
 function FounderSection() {
     const { ref, inView } = useSectionInView(0.2);
@@ -233,26 +232,16 @@ function FounderSection() {
     return (
         <section ref={ref} id="section-architect" className="bg-[#0a0c0f] py-28 md:py-36">
             <div className="max-w-6xl mx-auto px-6 md:px-12">
-                {/* Section label */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={inView ? { opacity: 1 } : {}}
-                    transition={{ duration: 0.7, ease: EASE }}
-                    className="mb-16 md:mb-20"
-                >
+                <Fade inView={inView} className="mb-16 md:mb-20">
                     <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-teal-500/60">
                         01 / Architect
                     </span>
                     <div className="mt-3 h-px w-12 bg-teal-500/30" />
-                </motion.div>
+                </Fade>
 
                 <div className="grid md:grid-cols-2 gap-16 md:gap-20 items-center">
-                    {/* LEFT – Manifesto */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 24 }}
-                        animate={inView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 1, ease: EASE, delay: 0.15 }}
-                    >
+                    {/* LEFT */}
+                    <Fade inView={inView} delay={0.15}>
                         <h2 className="font-sans text-3xl md:text-4xl font-bold text-white leading-[1.15] tracking-tight mb-8">
                             We don't build AI features.
                             <br />
@@ -281,12 +270,12 @@ function FounderSection() {
                                 Harsh Havanur
                             </p>
                             <p className="font-mono text-[10px] text-teal-500/60 tracking-[0.2em] uppercase mt-1.5">
-                                Founder & Chief Engineer — AUTONOMEX AI
+                                Founder &amp; Chief Engineer — Autonomex AI
                             </p>
                         </div>
-                    </motion.div>
+                    </Fade>
 
-                    {/* RIGHT – Terminal Authority Panel */}
+                    {/* RIGHT */}
                     <TerminalPanel inView={inView} />
                 </div>
             </div>
@@ -295,7 +284,7 @@ function FounderSection() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SECTION 3 – ENGINEERING PHILOSOPHY GRID
+// SECTION 3 — ENGINEERING PHILOSOPHY
 // ─────────────────────────────────────────────────────────────────────────────
 const PHILOSOPHY = [
     {
@@ -331,56 +320,40 @@ function PhilosophyGrid() {
             }}
         >
             <div className="max-w-6xl mx-auto px-6 md:px-12">
-                {/* Section label */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={inView ? { opacity: 1 } : {}}
-                    transition={{ duration: 0.7, ease: EASE }}
-                    className="mb-16 md:mb-20"
-                >
+                <Fade inView={inView} className="mb-16 md:mb-20">
                     <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-teal-500/60">
                         02 / Engineering Philosophy
                     </span>
                     <div className="mt-3 h-px w-12 bg-teal-500/30" />
-                </motion.div>
+                </Fade>
 
-                <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-                    {PHILOSOPHY.map((item, i) => (
-                        <motion.div
-                            key={item.index}
-                            initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-                            animate={
-                                inView
-                                    ? { opacity: 1, y: 0, filter: "blur(0px)" }
-                                    : {}
-                            }
-                            transition={{
-                                duration: 0.75,
-                                ease: EASE,
-                                delay: 0.1 + i * 0.4,
-                            }}
-                            className="relative p-8 bg-white/[0.025] border border-white/[0.06] rounded-sm group"
-                        >
-                            {/* Teal left accent */}
-                            <div className="absolute left-0 top-8 bottom-8 w-[2px] bg-teal-500/50 rounded-full" />
-
-                            <span className="block font-mono text-[11px] text-teal-500/50 tracking-widest uppercase mb-6">
-                                {item.index}
-                            </span>
-                            <h3 className="font-sans text-lg font-bold text-white leading-snug mb-4 tracking-tight">
-                                {item.title}
-                            </h3>
-                            <p className="text-slate-500 text-sm leading-relaxed">{item.body}</p>
-                        </motion.div>
-                    ))}
-                </div>
+                {/* Cards fade in together — no stagger, no blur, no translate */}
+                <Fade inView={inView} delay={0.2}>
+                    <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+                        {PHILOSOPHY.map((item) => (
+                            <div
+                                key={item.index}
+                                className="relative p-8 bg-white/[0.025] border border-white/[0.06]"
+                            >
+                                <div className="absolute left-0 top-8 bottom-8 w-[2px] bg-teal-500/50" />
+                                <span className="block font-mono text-[11px] text-teal-500/50 tracking-widest uppercase mb-6">
+                                    {item.index}
+                                </span>
+                                <h3 className="font-sans text-lg font-bold text-white leading-snug mb-4 tracking-tight">
+                                    {item.title}
+                                </h3>
+                                <p className="text-slate-500 text-sm leading-relaxed">{item.body}</p>
+                            </div>
+                        ))}
+                    </div>
+                </Fade>
             </div>
         </section>
     );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SECTION 4 – SERVICES AS SYSTEM MODULES
+// SECTION 4 — SERVICE MODULES
 // ─────────────────────────────────────────────────────────────────────────────
 const MODULES = [
     {
@@ -419,128 +392,91 @@ function SystemModules() {
     return (
         <section ref={ref} id="section-modules" className="bg-[#080b0e] py-28 md:py-36">
             <div className="max-w-6xl mx-auto px-6 md:px-12">
-                {/* Section label */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={inView ? { opacity: 1 } : {}}
-                    transition={{ duration: 0.7, ease: EASE }}
-                    className="mb-16 md:mb-20"
-                >
+                <Fade inView={inView} className="mb-16 md:mb-20">
                     <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-teal-500/60">
                         03 / Service Modules
                     </span>
                     <div className="mt-3 h-px w-12 bg-teal-500/30" />
-                </motion.div>
+                </Fade>
 
-                <div className="space-y-0 divide-y divide-white/[0.05]">
-                    {MODULES.map((mod, i) => {
-                        const fromLeft = i % 2 === 0;
-                        return (
-                            <motion.div
+                {/* All modules fade in together — no per-item slide */}
+                <Fade inView={inView} delay={0.2}>
+                    <div className="divide-y divide-white/[0.05]">
+                        {MODULES.map((mod) => (
+                            <div
                                 key={mod.id}
-                                initial={{ opacity: 0, x: fromLeft ? -60 : 60 }}
-                                animate={inView ? { opacity: 1, x: 0 } : {}}
-                                transition={{
-                                    duration: 0.85,
-                                    ease: EASE,
-                                    delay: 0.1 + i * 0.15,
-                                }}
-                                className="group relative py-9 flex flex-col md:flex-row md:items-center gap-4 md:gap-10 cursor-default"
+                                className="group relative py-9 flex flex-col md:flex-row md:items-center gap-4 md:gap-10"
                             >
-                                {/* Hover accent line */}
+                                {/* Hover accent — color transition only, no transform */}
                                 <div className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full bg-teal-500/40 transition-[width] duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]" />
 
-                                {/* ID */}
                                 <span className="font-mono text-[11px] text-slate-600 tracking-widest uppercase shrink-0 w-20">
                                     {mod.id}
                                 </span>
 
-                                {/* Title */}
                                 <h3 className="font-sans text-xl md:text-2xl font-bold text-white tracking-tight flex-1 group-hover:text-teal-300 transition-colors duration-300">
-                                    {title(mod.title)}
+                                    {mod.title}
                                 </h3>
 
-                                {/* Descriptor */}
                                 <p className="text-slate-500 text-sm leading-relaxed md:max-w-xs">
                                     {mod.descriptor}
                                 </p>
 
-                                {/* Tag */}
                                 <span className="font-mono text-[10px] text-teal-600/60 tracking-widest uppercase shrink-0 hidden md:block">
                                     {mod.tag}
                                 </span>
-                            </motion.div>
-                        );
-                    })}
-                </div>
+                            </div>
+                        ))}
+                    </div>
+                </Fade>
             </div>
         </section>
     );
 }
 
-function title(s: string) {
-    return s;
-}
-
 // ─────────────────────────────────────────────────────────────────────────────
-// SECTION 5 – VISION CLOSE
+// SECTION 5 — VISION CTA
 // ─────────────────────────────────────────────────────────────────────────────
 function VisionClose() {
     const { ref, inView } = useSectionInView(0.25);
 
     return (
         <section ref={ref} id="section-vision" className="bg-[#080b0e] py-32 md:py-44">
-            {/* Top rule */}
             <div className="max-w-6xl mx-auto px-6 md:px-12 mb-20">
                 <div className="h-px bg-gradient-to-r from-transparent via-teal-500/30 to-transparent" />
             </div>
 
             <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={inView ? { opacity: 1 } : {}}
-                    transition={{ duration: 0.6, ease: EASE }}
-                    className="mb-8"
-                >
+                <Fade inView={inView} className="mb-8">
                     <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-teal-500/60">
                         04 / Vision
                     </span>
-                </motion.div>
+                </Fade>
 
-                <motion.h2
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 1.1, ease: EASE, delay: 0.2 }}
-                    className="font-sans text-4xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-6"
-                >
-                    The future belongs to
-                    <br />
-                    <span className="text-teal-400">systems that think.</span>
-                </motion.h2>
+                <Fade inView={inView} delay={0.2}>
+                    <h2 className="font-sans text-4xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-6">
+                        The future belongs to
+                        <br />
+                        <span className="text-teal-400">systems that think.</span>
+                    </h2>
+                </Fade>
 
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={inView ? { opacity: 1 } : {}}
-                    transition={{ duration: 0.8, ease: EASE, delay: 0.55 }}
-                    className="text-slate-400 text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-12"
-                >
-                    We're building the AI infrastructure layer for India's most ambitious
-                    companies. If that sounds like you, let's begin.
-                </motion.p>
+                <Fade inView={inView} delay={0.4} className="mb-12">
+                    <p className="text-slate-400 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+                        We're building the AI infrastructure layer for India's most ambitious
+                        companies. If that sounds like you, let's begin.
+                    </p>
+                </Fade>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.7, ease: EASE, delay: 0.85 }}
-                >
+                <Fade inView={inView} delay={0.55}>
                     <Link
                         to="/contact"
-                        className="inline-flex items-center gap-3 px-8 py-4 bg-teal-500 text-black font-sans font-semibold text-sm tracking-wide hover:bg-teal-400 transition-colors duration-300 rounded-sm"
+                        className="inline-flex items-center gap-3 px-8 py-4 bg-teal-500 text-black font-sans font-semibold text-sm tracking-wide hover:bg-teal-400 transition-colors duration-300"
                     >
                         Start a Conversation
                         <span className="font-mono text-xs opacity-60">→</span>
                     </Link>
-                </motion.div>
+                </Fade>
             </div>
         </section>
     );
@@ -563,11 +499,8 @@ function ScrollProgressBar() {
     }, []);
 
     return (
-        <div className="fixed top-0 left-0 right-0 h-[2px] z-[9999] bg-transparent pointer-events-none">
-            <div
-                className="h-full bg-teal-500/70"
-                style={{ width: `${pct}%` }}
-            />
+        <div className="fixed top-0 left-0 right-0 h-[2px] z-[9999] pointer-events-none">
+            <div className="h-full bg-teal-500/70" style={{ width: `${pct}%` }} />
         </div>
     );
 }
@@ -593,9 +526,7 @@ function SectionHUD() {
             const el = document.getElementById(id);
             if (!el) return;
             const obs = new IntersectionObserver(
-                ([entry]) => {
-                    if (entry.isIntersecting) setActiveId(id);
-                },
+                ([entry]) => { if (entry.isIntersecting) setActiveId(id); },
                 { threshold: 0.35 }
             );
             obs.observe(el);
