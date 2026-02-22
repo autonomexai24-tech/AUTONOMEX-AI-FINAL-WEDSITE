@@ -11,29 +11,33 @@ export default function Header() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Scroll hide / show logic
   useEffect(() => {
     const controlNavbar = () => {
-      const currentScrollY = window.scrollY;
+      if (typeof window !== "undefined") {
+        const currentScrollY = window.scrollY;
 
-      if (currentScrollY === 0) {
-        setIsVisible(true);
-      } else if (currentScrollY > lastScrollY) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
+        if (currentScrollY === 0) {
+          setIsVisible(true);
+        } else if (currentScrollY > lastScrollY) {
+          setIsVisible(false);
+        } else {
+          setIsVisible(true);
+        }
+
+        setLastScrollY(currentScrollY);
       }
-
-      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", controlNavbar);
     return () => window.removeEventListener("scroll", controlNavbar);
   }, [lastScrollY]);
 
-  // Lock body scroll when mobile drawer is open
   useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? "hidden" : "unset";
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
     return () => {
       document.body.style.overflow = "unset";
     };
@@ -43,34 +47,28 @@ export default function Header() {
     <>
       <header
         className={`
-          fixed top-6 left-1/2 -translate-x-1/2 z-50 
-          w-[90%] md:w-[85%] max-w-5xl 
-          rounded-full border border-white/40 
-          bg-white/80 backdrop-blur-xl backdrop-saturate-150
-          shadow-[0_8px_30px_rgba(0,0,0,0.04)] 
-          transition-transform duration-300 ease-in-out
-          ${isVisible ? "translate-y-0" : "-translate-y-[200%]"}
-        `}
+        fixed top-6 left-1/2 -translate-x-1/2 z-50 
+        w-[90%] md:w-[85%] max-w-5xl 
+        rounded-full border border-white/40 
+        bg-white/80 backdrop-blur-xl backdrop-saturate-150
+        shadow-[0_8px_30px_rgba(0,0,0,0.04)] 
+        transition-transform duration-300 ease-in-out
+        ${isVisible ? "translate-y-0" : "-translate-y-[200%]"}
+      `}
       >
-        <div className="flex items-center justify-between px-6 py-6 md:py-8">
+        <div className="flex items-center justify-between px-6 py-5 md:py-6">
           
           {/* LOGO */}
-          <Link
-            to="/"
-            className="flex items-center gap-6 transition-transform duration-300 hover:scale-[1.02] active:scale-95"
-          >
-            {/* BIG DESKTOP ICON */}
+          <Link to="/" className="flex items-center gap-5 transition-all duration-300 hover:scale-[1.02] active:scale-95">
             <img
               src={logoIcon}
               alt="Autonomex AI Icon"
-              className="h-24 md:h-28 w-auto object-contain shrink-0"
+              className="h-20 md:h-24 w-auto object-contain shrink-0"
             />
-
-            {/* BIG DESKTOP TEXT */}
             <img
               src={logoText}
               alt="Autonomex AI"
-              className="h-12 md:h-14 w-auto object-contain shrink-0"
+              className="h-9 md:h-12 w-auto object-contain shrink-0"
             />
           </Link>
 
@@ -95,9 +93,7 @@ export default function Header() {
               onClick={(e) => {
                 if (window.location.pathname === "/") {
                   e.preventDefault();
-                  document
-                    .getElementById("services")
-                    ?.scrollIntoView({ behavior: "smooth" });
+                  document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
                 }
               }}
               className="text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60 px-4 py-2 rounded-full transition-all duration-300"
@@ -132,7 +128,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* MOBILE DRAWER */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -142,32 +137,34 @@ export default function Header() {
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
             className="fixed inset-0 z-[9999] bg-[#FDFBF7] flex flex-col"
           >
-            <div className="flex items-center justify-between px-6 py-6 border-b border-slate-200/80">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200/80">
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-5"
+                className="flex items-center gap-5 transition-all duration-300 hover:scale-[1.02] active:scale-95"
               >
                 <img
                   src={logoIcon}
                   alt="Autonomex AI Icon"
-                  className="h-20 w-auto object-contain shrink-0"
+                  className="h-16 w-auto object-contain shrink-0"
                 />
                 <img
                   src={logoText}
                   alt="Autonomex AI"
-                  className="h-10 w-auto object-contain shrink-0"
+                  className="h-8 w-auto object-contain shrink-0"
                 />
               </Link>
 
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-slate-500 hover:text-slate-900 transition-colors"
+                className="p-2 -mr-2 text-slate-500 hover:text-slate-900 transition-colors"
                 aria-label="Close menu"
               >
                 <X size={28} strokeWidth={1.5} />
               </button>
             </div>
+
+            {/* Rest untouched */}
           </motion.div>
         )}
       </AnimatePresence>
