@@ -9,6 +9,7 @@ import AboutPage from "./pages/AboutPage";
 import ServiceDetails from "./pages/ServiceDetails";
 import BookStrategy from "./pages/BookStrategy";
 import NotFound from "./pages/NotFound";
+import ScrollToTop from "./components/utils/ScrollToTop";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -17,6 +18,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/products" element={<BlankCanvas />} />
