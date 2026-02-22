@@ -9,6 +9,7 @@ export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [isProductExpanded, setIsProductExpanded] = useState(false);
 
   useEffect(() => {
     const controlNavbar = () => {
@@ -32,13 +33,23 @@ export default function Header() {
   }, [lastScrollY]);
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
     } else {
       document.body.style.overflow = "auto";
+      setIsProductExpanded(false);
     }
+
     return () => {
       document.body.style.overflow = "auto";
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen]);
 
@@ -127,60 +138,127 @@ export default function Header() {
         </div>
       </header>
 
-      {isOpen && (
-        <div
-          className="
-            fixed
-            inset-0
-            z-[100]
-            bg-white
-            flex
-            flex-col
-            items-center
-            justify-center
-            gap-8
-          "
-        >
-          <button
-            onClick={() => setIsOpen(false)}
-            className="absolute top-6 right-6 p-2 text-gray-900 hover:text-blue-600 transition-colors"
-            aria-label="Close menu"
-          >
-            <X size={32} />
-          </button>
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* BACKDROP */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm md:hidden"
+              onClick={() => setIsOpen(false)}
+            />
 
-          <Link
-            to="/"
-            onClick={() => setIsOpen(false)}
-            className="text-2xl font-medium text-gray-900 hover:text-blue-600 transition-colors duration-300"
-          >
-            Home
-          </Link>
-          <span className="text-2xl font-medium text-gray-900 hover:text-blue-600 transition-colors duration-300 cursor-default">
-            Product
-          </span>
-          <a
-            href="/#services"
-            onClick={(e) => {
-              setIsOpen(false);
-              if (window.location.pathname === "/") {
-                e.preventDefault();
-                document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
-              }
-            }}
-            className="text-2xl font-medium text-gray-900 hover:text-blue-600 transition-colors duration-300"
-          >
-            Services
-          </a>
-          <Link
-            to="/about"
-            onClick={() => setIsOpen(false)}
-            className="text-2xl font-medium text-gray-900 hover:text-blue-600 transition-colors duration-300"
-          >
-            About
-          </Link>
-        </div>
-      )}
+            {/* SLIDE-IN PANEL */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="fixed top-0 right-0 bottom-0 z-[101] w-[85vw] max-w-[400px] bg-white shadow-2xl md:hidden overflow-hidden flex flex-col"
+            >
+              {/* TOP BAR */}
+              <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200 shrink-0">
+                <Link to="/" onClick={() => setIsOpen(false)}>
+                  <img
+                    src="/logo-mark.png"
+                    alt="Autonomex AI Icon"
+                    className="h-9 w-auto object-contain"
+                  />
+                </Link>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 -mr-2 text-slate-400 hover:text-slate-900 transition-colors flex items-center justify-center rounded-full"
+                  aria-label="Close menu"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              {/* NAVIGATION LINKS */}
+              <div className="flex-1 overflow-y-auto px-4 py-6 space-y-3">
+                <Link
+                  to="/"
+                  onClick={() => setIsOpen(false)}
+                  className="bg-white rounded-2xl shadow-sm px-5 py-4 flex justify-between items-center text-lg font-medium hover:bg-slate-50 transition border border-slate-100/50"
+                >
+                  Home
+                  <ChevronRight size={20} className="text-slate-400" />
+                </Link>
+
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden">
+                  <button
+                    onClick={() => setIsProductExpanded(!isProductExpanded)}
+                    className="w-full px-5 py-4 flex justify-between items-center text-lg font-medium hover:bg-slate-50 transition"
+                  >
+                    Product
+                    <ChevronRight
+                      size={20}
+                      className={`text-slate-400 transition-transform duration-300 ${isProductExpanded ? 'rotate-90' : ''}`}
+                    />
+                  </button>
+                  <div
+                    className={`transition-all duration-300 ease-out overflow-hidden ${isProductExpanded ? "max-h-40" : "max-h-0"
+                      }`}
+                  >
+                    <div className="px-5 pb-4 pl-4 space-y-2">
+                      <Link to="/" onClick={() => setIsOpen(false)} className="block py-2 text-sm text-slate-600 hover:text-slate-900 transition-colors">
+                        AI Agents
+                      </Link>
+                      <Link to="/" onClick={() => setIsOpen(false)} className="block py-2 text-sm text-slate-600 hover:text-slate-900 transition-colors">
+                        Workflows
+                      </Link>
+                      <Link to="/" onClick={() => setIsOpen(false)} className="block py-2 text-sm text-slate-600 hover:text-slate-900 transition-colors">
+                        Integrations
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+
+                <a
+                  href="/#services"
+                  onClick={(e) => {
+                    setIsOpen(false);
+                    if (window.location.pathname === "/") {
+                      e.preventDefault();
+                      document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="bg-white rounded-2xl shadow-sm px-5 py-4 flex justify-between items-center text-lg font-medium hover:bg-slate-50 transition border border-slate-100/50"
+                >
+                  Services
+                  <ChevronRight size={20} className="text-slate-400" />
+                </a>
+
+                <Link
+                  to="/about"
+                  onClick={() => setIsOpen(false)}
+                  className="bg-white rounded-2xl shadow-sm px-5 py-4 flex justify-between items-center text-lg font-medium hover:bg-slate-50 transition border border-slate-100/50"
+                >
+                  About
+                  <ChevronRight size={20} className="text-slate-400" />
+                </Link>
+              </div>
+
+              {/* BOTTOM CTA */}
+              <div className="px-6 pt-6 pb-8 bg-white border-t border-slate-100 flex flex-col gap-3 shrink-0">
+                <Link to="/book-strategy" onClick={() => setIsOpen(false)} className="w-full">
+                  <button className="w-full bg-[#0B1120] text-white rounded-xl py-4 font-semibold text-center hover:bg-slate-800 transition shadow-lg shadow-slate-900/10">
+                    Fill the Details
+                  </button>
+                </Link>
+                <a href="tel:+917676808950" onClick={() => setIsOpen(false)} className="w-full">
+                  <button className="w-full bg-white border border-slate-300 text-slate-700 rounded-xl py-4 font-medium text-center hover:bg-slate-50 transition">
+                    Call Us
+                  </button>
+                </a>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 }
