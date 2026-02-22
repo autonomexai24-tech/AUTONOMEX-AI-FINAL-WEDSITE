@@ -135,8 +135,98 @@ function SystemBootHero() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SECTION 2 – FOUNDER
+// SECTION 2 – ARCHITECT AUTHORITY PANEL
 // ─────────────────────────────────────────────────────────────────────────────
+
+// ─── Terminal lines (static — all visible after fade-in) ────────────────────
+const TERMINAL_LINES = [
+    { key: "ARCHITECT", value: "HARSH HAVANUR" },
+    { key: "ROLE", value: "SYSTEMS ENGINEER" },
+    { key: "DOMAIN", value: "AI INFRASTRUCTURE" },
+    { key: "MODE", value: "PRODUCTION" },
+    { key: "STATUS", value: "STABLE" },
+];
+
+function TerminalPanel({ inView }: { inView: boolean }) {
+    const [cursorOn, setCursorOn] = useState(true);
+
+    useEffect(() => {
+        const id = setInterval(() => setCursorOn((v) => !v), 530);
+        return () => clearInterval(id);
+    }, []);
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.9, ease: EASE, delay: 0.4 }}
+            className="relative md:ml-auto w-full"
+        >
+            {/* Panel shell */}
+            <div
+                className="relative border border-teal-500/20 bg-[#060809] overflow-hidden"
+                style={{
+                    backgroundImage:
+                        "linear-gradient(rgba(20,184,166,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,0.018) 1px, transparent 1px)",
+                    backgroundSize: "32px 32px",
+                }}
+            >
+                {/* Title bar */}
+                <div className="flex items-center gap-3 px-5 py-3 border-b border-teal-500/10 bg-white/[0.012]">
+                    <span className="w-2 h-2 rounded-full bg-teal-500/40" />
+                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-teal-500/45">
+                        AUTONOMEX / ARCHITECT_PROFILE
+                    </span>
+                </div>
+
+                {/* Terminal body */}
+                <div className="px-6 py-8 space-y-[14px]">
+                    {TERMINAL_LINES.map((line) => (
+                        <div key={line.key} className="flex items-baseline gap-0">
+                            <span className="font-mono text-[11px] text-slate-600 tracking-wider shrink-0 mr-2">
+                                &gt;
+                            </span>
+                            <span className="font-mono text-[11px] text-slate-500 tracking-wider shrink-0 w-36">
+                                {line.key}:
+                            </span>
+                            <span className="font-mono text-[13px] font-medium text-teal-300 tracking-wide">
+                                {line.value}
+                            </span>
+                        </div>
+                    ))}
+
+                    {/* Blinking prompt cursor */}
+                    <div className="flex items-center gap-2 pt-2">
+                        <span className="font-mono text-[11px] text-slate-700">&gt;</span>
+                        <span
+                            className="inline-block w-[7px] h-[14px] bg-teal-400/60"
+                            style={{ opacity: cursorOn ? 1 : 0 }}
+                        />
+                    </div>
+                </div>
+
+                {/* Status footer */}
+                <div className="px-5 py-3 border-t border-teal-500/10 flex items-center justify-between">
+                    <span className="font-mono text-[10px] text-slate-700 tracking-wider">
+                        AUTONOMEX AI — SYSTEMS DIVISION
+                    </span>
+                    <span className="flex items-center gap-1.5 font-mono text-[10px] text-teal-500/55">
+                        <span className="w-1.5 h-1.5 rounded-full bg-teal-500/55 animate-pulse" />
+                        LIVE
+                    </span>
+                </div>
+            </div>
+
+            {/* Corner frame accents */}
+            <div className="absolute -top-px -left-px  w-4 h-4 border-t-2 border-l-2 border-teal-500/50" />
+            <div className="absolute -top-px -right-px w-4 h-4 border-t-2 border-r-2 border-teal-500/50" />
+            <div className="absolute -bottom-px -left-px  w-4 h-4 border-b-2 border-l-2 border-teal-500/50" />
+            <div className="absolute -bottom-px -right-px w-4 h-4 border-b-2 border-r-2 border-teal-500/50" />
+        </motion.div>
+    );
+}
+
+
 function FounderSection() {
     const { ref, inView } = useSectionInView(0.2);
 
@@ -151,12 +241,12 @@ function FounderSection() {
                     className="mb-16 md:mb-20"
                 >
                     <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-teal-500/60">
-                        01 / Founder
+                        01 / Architect
                     </span>
                     <div className="mt-3 h-px w-12 bg-teal-500/30" />
                 </motion.div>
 
-                <div className="grid md:grid-cols-2 gap-16 md:gap-24 items-center">
+                <div className="grid md:grid-cols-2 gap-16 md:gap-20 items-center">
                     {/* LEFT – Manifesto */}
                     <motion.div
                         initial={{ opacity: 0, y: 24 }}
@@ -169,83 +259,35 @@ function FounderSection() {
                             <span className="text-slate-400">We engineer AI systems.</span>
                         </h2>
 
-                        <div className="space-y-5 text-slate-400 leading-relaxed">
+                        <div className="space-y-5 text-slate-400 text-sm leading-[1.8]">
                             <p>
-                                Autonomex was built on a single belief: that great AI has to be
-                                architected from first principles — not assembled from templates.
+                                Production-grade AI is not a plugin. It is a precision-engineered
+                                system — designed around data contracts, failure boundaries, and
+                                explicit operational constraints.
                             </p>
                             <p>
-                                Every system we deploy is engineered to operate without constant
-                                oversight. Structured. Reliable. Scalable from day one.
+                                Every deployment we ship is specced, versioned, and stress-tested
+                                before it touches a live environment. No prototypes in production.
+                                No ambiguity in scope.
                             </p>
                             <p>
-                                We work exclusively with companies that are serious about
-                                building AI infrastructure — not experimenting with it.
+                                We engage with operators who understand that AI infrastructure
+                                is a long-term architectural commitment — not a quarterly experiment.
                             </p>
                         </div>
 
                         <div className="mt-10 pt-8 border-t border-white/[0.06]">
-                            <p className="font-sans font-semibold text-white text-sm">
-                                Harsh Bhatt
+                            <p className="font-sans font-semibold text-white text-sm tracking-wide">
+                                Harsh Havanur
                             </p>
-                            <p className="font-mono text-[11px] text-teal-500/70 tracking-widest uppercase mt-1">
-                                Founder & Chief Engineer
+                            <p className="font-mono text-[10px] text-teal-500/60 tracking-[0.2em] uppercase mt-1.5">
+                                Founder & Chief Engineer — AUTONOMEX AI
                             </p>
                         </div>
                     </motion.div>
 
-                    {/* RIGHT – Portrait with scan-line reveal */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={inView ? { opacity: 1 } : {}}
-                        transition={{ duration: 0.5, ease: EASE, delay: 0.3 }}
-                        className="relative"
-                    >
-                        <div className="relative overflow-hidden rounded-sm aspect-[3/4] max-w-sm mx-auto md:mx-0 md:ml-auto">
-                            {/* Portrait image */}
-                            <img
-                                src="/founder-portrait.png"
-                                alt="Harsh Bhatt – Founder, Autonomex AI"
-                                className="w-full h-full object-cover object-center"
-                            />
-
-                            {/* Scan-line reveal overlay */}
-                            <motion.div
-                                initial={{ top: 0, height: "100%" }}
-                                animate={inView ? { height: "0%" } : {}}
-                                transition={{ duration: 1.6, ease: [0.25, 1, 0.5, 1], delay: 0.5 }}
-                                className="absolute inset-x-0 top-0 bg-[#0a0c0f] z-10"
-                                style={{ bottom: "auto" }}
-                            />
-
-                            {/* Subtle teal scan line that sweeps during reveal */}
-                            <motion.div
-                                initial={{ top: 0, opacity: 1 }}
-                                animate={inView ? { top: "100%", opacity: 0 } : {}}
-                                transition={{ duration: 1.6, ease: [0.25, 1, 0.5, 1], delay: 0.5 }}
-                                className="absolute inset-x-0 h-[2px] bg-teal-400/60 z-20"
-                            />
-
-                            {/* Corner accents */}
-                            <div className="absolute top-3 left-3 w-4 h-4 border-t border-l border-teal-500/40" />
-                            <div className="absolute top-3 right-3 w-4 h-4 border-t border-r border-teal-500/40" />
-                            <div className="absolute bottom-3 left-3 w-4 h-4 border-b border-l border-teal-500/40" />
-                            <div className="absolute bottom-3 right-3 w-4 h-4 border-b border-r border-teal-500/40" />
-                        </div>
-
-                        {/* Image label */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={inView ? { opacity: 1 } : {}}
-                            transition={{ duration: 0.6, delay: 2.2 }}
-                            className="mt-3 flex items-center gap-2 max-w-sm mx-auto md:mx-0 md:ml-auto"
-                        >
-                            <span className="w-1 h-1 rounded-full bg-teal-500" />
-                            <span className="font-mono text-[10px] text-slate-600 tracking-wider uppercase">
-                                SVR_CAM_01 / RENDER_COMPLETE
-                            </span>
-                        </motion.div>
-                    </motion.div>
+                    {/* RIGHT – Terminal Authority Panel */}
+                    <TerminalPanel inView={inView} />
                 </div>
             </div>
         </section>
