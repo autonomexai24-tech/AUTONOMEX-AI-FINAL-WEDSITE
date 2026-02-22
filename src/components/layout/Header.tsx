@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const controlNavbar = () => {
@@ -32,15 +32,15 @@ export default function Header() {
   }, [lastScrollY]);
 
   useEffect(() => {
-    if (mobileMenuOpen) {
+    if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "auto";
     }
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "auto";
     };
-  }, [mobileMenuOpen]);
+  }, [isOpen]);
 
   return (
     <>
@@ -117,7 +117,7 @@ export default function Header() {
             </Link>
 
             <button
-              onClick={() => setMobileMenuOpen(true)}
+              onClick={() => setIsOpen(true)}
               className="md:hidden p-2 text-slate-600 hover:text-slate-900 transition-colors"
               aria-label="Open menu"
             >
@@ -127,46 +127,60 @@ export default function Header() {
         </div>
       </header>
 
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-0 z-[9999] bg-[#FDFBF7] flex flex-col"
+      {isOpen && (
+        <div
+          className="
+            fixed
+            inset-0
+            z-[100]
+            bg-white
+            flex
+            flex-col
+            items-center
+            justify-center
+            gap-8
+          "
+        >
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-6 right-6 p-2 text-gray-900 hover:text-blue-600 transition-colors"
+            aria-label="Close menu"
           >
-            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200/80">
-              <Link
-                to="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-5 transition-all duration-300 hover:scale-[1.02] active:scale-95"
-              >
-                <img
-                  src="/logo-mark.png"
-                  alt="Autonomex AI Icon"
-                  className="h-11 w-auto object-contain shrink-0"
-                />
-                <img
-                  src="/logo-wordmark.png"
-                  alt="Autonomex AI"
-                  className="h-8 w-auto object-contain shrink-0"
-                />
-              </Link>
+            <X size={32} />
+          </button>
 
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2 -mr-2 text-slate-500 hover:text-slate-900 transition-colors"
-                aria-label="Close menu"
-              >
-                <X size={28} strokeWidth={1.5} />
-              </button>
-            </div>
-
-            {/* Rest untouched */}
-          </motion.div>
-        )}
-      </AnimatePresence>
+          <Link
+            to="/"
+            onClick={() => setIsOpen(false)}
+            className="text-2xl font-medium text-gray-900 hover:text-blue-600 transition-colors duration-300"
+          >
+            Home
+          </Link>
+          <span className="text-2xl font-medium text-gray-900 hover:text-blue-600 transition-colors duration-300 cursor-default">
+            Product
+          </span>
+          <a
+            href="/#services"
+            onClick={(e) => {
+              setIsOpen(false);
+              if (window.location.pathname === "/") {
+                e.preventDefault();
+                document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+            className="text-2xl font-medium text-gray-900 hover:text-blue-600 transition-colors duration-300"
+          >
+            Services
+          </a>
+          <Link
+            to="/about"
+            onClick={() => setIsOpen(false)}
+            className="text-2xl font-medium text-gray-900 hover:text-blue-600 transition-colors duration-300"
+          >
+            About
+          </Link>
+        </div>
+      )}
     </>
   );
 }
