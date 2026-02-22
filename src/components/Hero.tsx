@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const Hero = () => {
@@ -56,9 +57,11 @@ const Hero = () => {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
-            <Button className="w-full sm:w-auto rounded-full bg-slate-900 text-white hover:bg-slate-800 px-8 py-6 text-base font-semibold shadow-xl hover:scale-105 transition-transform">
-              Book Strategy Call
-            </Button>
+            <Link to="/book-strategy" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto rounded-full bg-slate-900 text-white hover:bg-slate-800 px-8 py-6 text-base font-semibold shadow-xl hover:scale-105 transition-transform">
+                Fill the Details
+              </Button>
+            </Link>
             <Button
               variant="outline"
               className="w-full sm:w-auto rounded-full border-slate-300 text-slate-700 px-8 py-6 text-base hover:bg-slate-50"

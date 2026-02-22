@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Zap, ArrowRight } from "lucide-react";
 
@@ -126,19 +127,21 @@ const CtaSection = () => {
             </p>
 
             {/* CTA Button */}
-            <Button
-              size="lg"
-              className="
-                group
-                rounded-full bg-[#0B1120] text-white
-                px-8 py-6 text-[15px] font-bold tracking-wide
-                hover:bg-blue-600 hover:scale-[1.02] transition-all duration-300
-                shadow-xl shadow-slate-900/20
-              "
-            >
-              Book Strategy Session
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            <Link to="/book-strategy">
+              <Button
+                size="lg"
+                className="
+                  group
+                  rounded-full bg-[#0B1120] text-white
+                  px-8 py-6 text-[15px] font-bold tracking-wide
+                  hover:bg-blue-600 hover:scale-[1.02] transition-all duration-300
+                  shadow-xl shadow-slate-900/20
+                "
+              >
+                Fill the Details
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
 
             {/* Micro-copy */}
             <p className="mt-6 text-xs text-slate-400 font-mono uppercase tracking-widest">

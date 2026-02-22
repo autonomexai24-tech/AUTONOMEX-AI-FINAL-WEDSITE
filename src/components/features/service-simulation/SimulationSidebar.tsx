@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Phone, Calendar, ArrowRight, Sparkles } from "lucide-react";
 
@@ -34,6 +35,7 @@ export default function SimulationSidebar({ serviceData, serviceId, isPending = 
   const [activePhase, setActivePhase] = useState("phase-1");
   const ctaRef = useRef<HTMLDivElement>(null);
   const isCtaInView = useInView(ctaRef, { once: true, margin: "-100px" });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -212,14 +214,14 @@ export default function SimulationSidebar({ serviceData, serviceId, isPending = 
               <motion.button
                 onClick={() => {
                   handleAnalytics("Booking");
-                  window.open("https://calendly.com/autonomex-ai/strategy-session", "_blank");
+                  navigate("/book-strategy");
                 }}
                 className="w-full bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 px-6 py-4 rounded-xl font-semibold text-sm flex items-center gap-3 transition-all"
                 whileHover={{ scale: 1.02, borderColor: "#94a3b8" }}
                 whileTap={{ scale: 0.98 }}
               >
                 <Calendar className="w-4 h-4 text-blue-600" />
-                <span className="flex-1 text-left">Book Strategy Session</span>
+                <span className="flex-1 text-left">Fill the Details</span>
                 <ArrowRight className="w-4 h-4 text-slate-400" />
               </motion.button>
             </div>

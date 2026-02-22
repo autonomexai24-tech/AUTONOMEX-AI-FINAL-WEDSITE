@@ -110,9 +110,9 @@ export default function Header() {
 
           {/* ACTIONS */}
           <div className="flex items-center gap-4">
-            <Link to="/contact">
+            <Link to="/book-strategy">
               <Button className="hidden md:inline-flex rounded-full bg-slate-900 text-white hover:bg-slate-800 px-6 py-2 text-xs font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
-                Book Strategy
+                Fill the Details
               </Button>
             </Link>
 

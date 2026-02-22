@@ -78,21 +78,21 @@ const HeroSection = () => {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4">
-            <Link to="/contact">
+            <Link to="/book-strategy">
               <Button className="h-14 px-10 rounded-full bg-[#0B1120] text-white text-[15px] font-semibold shadow-2xl hover:shadow-xl hover:scale-[1.02] hover:bg-slate-900 transition-all duration-300 group w-full sm:w-auto">
-                Contact Us
+                Fill the Details
                 <MessageSquare className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link to="/contact" className="w-full sm:w-auto">
+            <a href="tel:+917676808950" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 className="h-14 w-full px-10 rounded-full border-slate-300 text-slate-700 hover:bg-white hover:text-slate-900 text-[15px] font-medium backdrop-blur-sm"
               >
-                Contact Us
+                Call Us
                 <Phone className="w-4 h-4 ml-2" />
               </Button>
-            </Link>
+            </a>
           </div>
 
           {/* 10x PREMIUM MOBILE VISUAL (iOS-Grade Glass Widget) */}
