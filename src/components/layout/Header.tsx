@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import logoIcon from "../../assets/logo-icon.png";
-import logoText from "../../assets/logo-text.png";
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronRight, Lock } from "lucide-react";
@@ -57,18 +56,18 @@ export default function Header() {
       `}
       >
         <div className="flex items-center justify-between px-6 py-5 md:py-6">
-          
+
           {/* LOGO */}
           <Link to="/" className="flex items-center gap-5 transition-all duration-300 hover:scale-[1.02] active:scale-95">
             <img
-              src={logoIcon}
+              src="/logo-mark.png"
               alt="Autonomex AI Icon"
-              className="h-20 md:h-24 w-auto object-contain shrink-0"
+              className="h-11 md:h-14 w-auto object-contain shrink-0"
             />
             <img
-              src={logoText}
+              src="/logo-wordmark.png"
               alt="Autonomex AI"
-              className="h-9 md:h-12 w-auto object-contain shrink-0"
+              className="h-8 md:h-10 w-auto object-contain shrink-0"
             />
           </Link>
 
@@ -144,12 +143,12 @@ export default function Header() {
                 className="flex items-center gap-5 transition-all duration-300 hover:scale-[1.02] active:scale-95"
               >
                 <img
-                  src={logoIcon}
+                  src="/logo-mark.png"
                   alt="Autonomex AI Icon"
-                  className="h-16 w-auto object-contain shrink-0"
+                  className="h-11 w-auto object-contain shrink-0"
                 />
                 <img
-                  src={logoText}
+                  src="/logo-wordmark.png"
                   alt="Autonomex AI"
                   className="h-8 w-auto object-contain shrink-0"
                 />
