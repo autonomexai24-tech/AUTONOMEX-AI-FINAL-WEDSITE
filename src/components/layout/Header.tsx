@@ -58,11 +58,11 @@ export default function Header() {
         ${isVisible ? "translate-y-0" : "-translate-y-[200%]"}
       `}
       >
-        <div className="flex items-center justify-between px-6 py-3">
+        <div className="flex items-center justify-between px-6 py-4 md:py-5">
           {/* LOGO */}
-          <Link to="/" className="flex items-center gap-3 md:gap-4 transition-all duration-300 hover:scale-[1.02] active:scale-95">
-            <img src={logoIcon} alt="Autonomex AI Icon" className="h-10 md:h-12 w-auto object-contain shrink-0" />
-            <img src={logoText} alt="Autonomex AI" className="h-5 md:h-6 w-auto object-contain shrink-0" />
+          <Link to="/" className="flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] active:scale-95">
+            <img src={logoIcon} alt="Autonomex AI Icon" className="h-11 md:h-14 w-auto object-contain shrink-0" />
+            <img src={logoText} alt="Autonomex AI" className="h-5 md:h-7 w-auto object-contain shrink-0" />
           </Link>
 
           {/* DESKTOP NAV (Hidden on Mobile) */}
@@ -133,9 +133,9 @@ export default function Header() {
           >
             {/* Drawer Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200/80">
-              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 md:gap-4 transition-all duration-300 hover:scale-[1.02] active:scale-95">
-                <img src={logoIcon} alt="Autonomex AI Icon" className="h-10 md:h-12 w-auto object-contain shrink-0" />
-                <img src={logoText} alt="Autonomex AI" className="h-5 md:h-6 w-auto object-contain shrink-0" />
+              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] active:scale-95">
+                <img src={logoIcon} alt="Autonomex AI Icon" className="h-11 md:h-14 w-auto object-contain shrink-0" />
+                <img src={logoText} alt="Autonomex AI" className="h-5 md:h-7 w-auto object-contain shrink-0" />
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
