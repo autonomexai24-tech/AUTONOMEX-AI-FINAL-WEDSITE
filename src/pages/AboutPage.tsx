@@ -45,7 +45,7 @@ function SystemBootHero() {
     const { displayed, done } = useTypewriter("Initializing Autonomex Systems...");
 
     return (
-        <section className="relative min-h-screen flex flex-col items-center justify-center bg-[#080b0e] overflow-hidden">
+        <section id="section-boot" className="relative min-h-screen flex flex-col items-center justify-center bg-[#080b0e] overflow-hidden">
             {/* Subtle radial glow */}
             <div
                 className="absolute inset-0 pointer-events-none"
@@ -122,7 +122,7 @@ function SystemBootHero() {
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 2.2, duration: 0.8 }}
+                transition={{ delay: 2.2, duration: 0.8, ease: EASE }}
                 className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
             >
                 <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-600">
@@ -231,7 +231,7 @@ function FounderSection() {
     const { ref, inView } = useSectionInView(0.2);
 
     return (
-        <section ref={ref} className="bg-[#0a0c0f] py-28 md:py-36">
+        <section ref={ref} id="section-architect" className="bg-[#0a0c0f] py-28 md:py-36">
             <div className="max-w-6xl mx-auto px-6 md:px-12">
                 {/* Section label */}
                 <motion.div
@@ -321,6 +321,7 @@ function PhilosophyGrid() {
     return (
         <section
             ref={ref}
+            id="section-philosophy"
             className="relative py-28 md:py-36"
             style={{
                 background: "#0d1014",
@@ -416,7 +417,7 @@ function SystemModules() {
     const { ref, inView } = useSectionInView(0.1);
 
     return (
-        <section ref={ref} className="bg-[#080b0e] py-28 md:py-36">
+        <section ref={ref} id="section-modules" className="bg-[#080b0e] py-28 md:py-36">
             <div className="max-w-6xl mx-auto px-6 md:px-12">
                 {/* Section label */}
                 <motion.div
@@ -488,7 +489,7 @@ function VisionClose() {
     const { ref, inView } = useSectionInView(0.25);
 
     return (
-        <section ref={ref} className="bg-[#080b0e] py-32 md:py-44">
+        <section ref={ref} id="section-vision" className="bg-[#080b0e] py-32 md:py-44">
             {/* Top rule */}
             <div className="max-w-6xl mx-auto px-6 md:px-12 mb-20">
                 <div className="h-px bg-gradient-to-r from-transparent via-teal-500/30 to-transparent" />
@@ -546,11 +547,105 @@ function VisionClose() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SCROLL PROGRESS BAR
+// ─────────────────────────────────────────────────────────────────────────────
+function ScrollProgressBar() {
+    const [pct, setPct] = useState(0);
+
+    useEffect(() => {
+        function onScroll() {
+            const scrolled = window.scrollY;
+            const total = document.documentElement.scrollHeight - window.innerHeight;
+            setPct(total > 0 ? (scrolled / total) * 100 : 0);
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+
+    return (
+        <div className="fixed top-0 left-0 right-0 h-[2px] z-[9999] bg-transparent pointer-events-none">
+            <div
+                className="h-full bg-teal-500/70"
+                style={{ width: `${pct}%` }}
+            />
+        </div>
+    );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION INDEX HUD
+// ─────────────────────────────────────────────────────────────────────────────
+const HUD_SECTIONS = [
+    { id: "section-boot", label: "SYSTEM_BOOT", index: "01" },
+    { id: "section-architect", label: "ARCHITECT", index: "02" },
+    { id: "section-philosophy", label: "PHILOSOPHY", index: "03" },
+    { id: "section-modules", label: "MODULES", index: "04" },
+    { id: "section-vision", label: "VISION", index: "05" },
+];
+
+function SectionHUD() {
+    const [activeId, setActiveId] = useState("section-boot");
+
+    useEffect(() => {
+        const observers: IntersectionObserver[] = [];
+
+        HUD_SECTIONS.forEach(({ id }) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const obs = new IntersectionObserver(
+                ([entry]) => {
+                    if (entry.isIntersecting) setActiveId(id);
+                },
+                { threshold: 0.35 }
+            );
+            obs.observe(el);
+            observers.push(obs);
+        });
+
+        return () => observers.forEach((o) => o.disconnect());
+    }, []);
+
+    return (
+        <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-5 items-end pointer-events-none">
+            {HUD_SECTIONS.map(({ id, label, index }) => {
+                const active = activeId === id;
+                return (
+                    <div
+                        key={id}
+                        className="flex items-center gap-2.5"
+                        style={{ opacity: active ? 1 : 0.28 }}
+                    >
+                        <span
+                            className="font-mono text-[9px] tracking-[0.2em] uppercase"
+                            style={{ color: active ? "rgb(45,212,191)" : "rgb(100,116,139)" }}
+                        >
+                            {label}
+                        </span>
+                        <span
+                            className="font-mono text-[9px] tracking-wider"
+                            style={{ color: active ? "rgb(45,212,191)" : "rgb(71,85,105)" }}
+                        >
+                            {index}
+                        </span>
+                        <div
+                            className="w-px h-3"
+                            style={{ background: active ? "rgb(45,212,191)" : "rgb(51,65,85)" }}
+                        />
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // PAGE ROOT
 // ─────────────────────────────────────────────────────────────────────────────
 export default function AboutPage() {
     return (
         <div className="min-h-screen bg-[#080b0e]">
+            <ScrollProgressBar />
+            <SectionHUD />
             <Header />
             <main>
                 <SystemBootHero />
